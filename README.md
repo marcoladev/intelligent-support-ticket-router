@@ -26,20 +26,6 @@ The AI runs locally using Ollama, allowing development without external API cost
 - Ollama (Local LLM)
 - Swagger
 
-## 🏗️ Architecture
-
-Client
-|
-ASP.NET Core Web API
-|
-Ticket Orchestrator
-|
-Semantic Kernel
-|
-Ollama (Local LLM)
-|
-Llama 3.1 Model
-
 ## ✨ Features
 
 - REST API for ticket processing
