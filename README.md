@@ -77,7 +77,6 @@ https://ollama.com
 
 Start the Ollama service:
 
-```bash
 ollama serve
 ollama pull llama3.1
 ollama run llama3.1
