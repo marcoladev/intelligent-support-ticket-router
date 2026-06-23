@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace IntelligentTicketRouter.Api.DTOS;
+namespace IntelligentTicketRouter.Application.Tickets;
 
-public record TicketRequestDto(
+public record TicketCommand(
     [Required][EmailAddress] string CustomerEmail,
     [Required][MinLength(10)] string Message
 );

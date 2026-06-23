@@ -1,26 +1,19 @@
-using IntelligentTicketRouter.Api.DataManipulation;
+using IntelligentTicketRouter.Application.Interfaces;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
-namespace IntelligentTicketRouter.Api;
+namespace IntelligentTicketRouter.Infrastructure.AI;
 
-public class TicketOrchestrator
+public class OllamaAiProcessor : IOllamaAiProcessor
 {
     private readonly Kernel _kernel;
-    private readonly AppDbContext _context;
 
-    public TicketOrchestrator(
-    AppDbContext context,
-    CustomerOrderPlugin plugin,
-    Kernel kernel)
+    public OllamaAiProcessor(Kernel kernel)
     {
-        _context = context;
         _kernel = kernel;
     }
 
-    public async Task<string> ProcessTicketAsync(
-        string customerEmail,
-        string ticketMessage)
+    public async Task<string> ProcessSupportTicketAsync(string customerEmail, string ticketMessage)
     {
         var chat = _kernel
             .GetRequiredService<IChatCompletionService>();
@@ -42,8 +35,7 @@ public class TicketOrchestrator
         {ticketMessage}
         """);
 
-        var response =
-            await chat.GetChatMessageContentAsync(history);
+        var response = await chat.GetChatMessageContentAsync(history);
 
         return response.Content ?? "";
     }

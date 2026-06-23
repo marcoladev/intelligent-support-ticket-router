@@ -1,5 +1,8 @@
-using IntelligentTicketRouter.Api;
-using IntelligentTicketRouter.Api.DataManipulation;
+
+using IntelligentTicketRouter.Application.Interfaces;
+using IntelligentTicketRouter.Application.Tickets;
+using IntelligentTicketRouter.Infrastructure.AI;
+using IntelligentTicketRouter.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SemanticKernel;
 
@@ -17,7 +20,7 @@ var connectionString =
     ?? throw new InvalidOperationException(
         "DefaultConnection missing");
 
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(
         connectionString,
         ServerVersion.AutoDetect(connectionString)));
@@ -34,8 +37,8 @@ builder.Services.AddSingleton<Kernel>(sp =>
     return kernelBuilder.Build();
 });
 
-builder.Services.AddScoped<TicketOrchestrator>();
-builder.Services.AddScoped<CustomerOrderPlugin>();
+builder.Services.AddScoped<TicketOrchestratorHandler>();
+builder.Services.AddScoped<IOllamaAiProcessor, OllamaAiProcessor>();
 
 var app = builder.Build();
 
