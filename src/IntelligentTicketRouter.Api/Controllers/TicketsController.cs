@@ -1,4 +1,4 @@
-using IntelligentTicketRouter.Api.DTOS;
+using IntelligentTicketRouter.Application.Tickets;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IntelligentTicketRouter.Api.Controllers
@@ -8,28 +8,28 @@ namespace IntelligentTicketRouter.Api.Controllers
     [Produces("application/json")]
     public class TicketsController : ControllerBase
     {
-        private readonly TicketOrchestrator _orchestrator;
+        private readonly TicketOrchestratorHandler _ticketHandler;
         private readonly ILogger<TicketsController> _logger;
 
-        public TicketsController(TicketOrchestrator orchestrator, ILogger<TicketsController> logger)
+        public TicketsController(TicketOrchestratorHandler ticketHandler, ILogger<TicketsController> logger)
         {
-            _orchestrator = orchestrator;
+            _ticketHandler = ticketHandler;
             _logger = logger;
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(TicketResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TicketCommand), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ProcessTicket([FromBody] TicketRequestDto request)
+        public async Task<IActionResult> ProcessTicket([FromBody] TicketCommand request)
         {
             _logger.LogInformation("Processing incoming ticket for customer: {Email}", request.CustomerEmail);
 
             try
             {
-                var aiResult = await _orchestrator.ProcessTicketAsync(request.CustomerEmail, request.Message);
+                var aiResult = await _ticketHandler.ProcessTicketAsync(request.CustomerEmail, request.Message);
 
-                var response = new TicketResponseDto(aiResult, DateTime.UtcNow);
+                var response = new TicketResponse(aiResult, DateTime.UtcNow);
                 return Ok(response);
             }
             catch (Exception ex)
