@@ -39,11 +39,15 @@ The AI runs locally using Ollama, allowing development without external API cost
 
 ## 📂 Project Structure
 
-src
-├── IntelligentTicketRouter.Api
-├── IntelligentTicketRouter.Application
-├── IntelligentTicketRouter.Domain
-└── IntelligentTicketRouter.Infrastructure
+IntelligentTicketRouter
+│
+├── src
+│   ├── IntelligentTicketRouter.Api
+│   ├── IntelligentTicketRouter.Application
+│   ├── IntelligentTicketRouter.Domain
+│   ├── IntelligentTicketRouter.Infrastructure
+│
+└── IntelligentTicketRouter.sln
 
 ## ▶️ Running Locally
 
