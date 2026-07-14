@@ -2,6 +2,7 @@ using IntelligentTicketRouter.Application.Interfaces;
 using IntelligentTicketRouter.Application.Tickets;
 using IntelligentTicketRouter.Infrastructure.AI;
 using IntelligentTicketRouter.Infrastructure.Persistence;
+using IntelligentTicketRouter.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SemanticKernel;
 
@@ -34,6 +35,7 @@ public static class Startup
 
         services.AddScoped<TicketOrchestratorHandler>();
         services.AddScoped<IOllamaAiProcessor, OllamaAiProcessor>();
+        services.AddScoped<ITicketRepository, TicketRepository>();
 
         return services;
     }

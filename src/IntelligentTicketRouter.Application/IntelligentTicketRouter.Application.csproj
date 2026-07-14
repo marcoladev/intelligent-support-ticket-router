@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <ProjectReference Include="../IntelligentTicketRouter.Domain/IntelligentTicketRouter.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
