@@ -1,4 +1,5 @@
 using IntelligentTicketRouter.Application.Interfaces;
+using IntelligentTicketRouter.Domain.Entities;
 
 namespace IntelligentTicketRouter.Application.Tickets;
 
@@ -11,6 +12,11 @@ public class TicketOrchestratorHandler
     {
         _ollamaAiProcessor = ollamaAiProcessor;
         _ticketRepository = ticketRepository;
+    }
+
+    public async Task<List<Ticket>> GetTicketListAsync()
+    {
+        return await _ticketRepository.GetTicketListAsync();
     }
 
     public async Task<string> ProcessTicketAsync(string customerEmail, string ticketMessage)

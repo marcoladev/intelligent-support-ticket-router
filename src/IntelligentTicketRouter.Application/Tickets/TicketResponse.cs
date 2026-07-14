@@ -1,6 +1,6 @@
 namespace IntelligentTicketRouter.Application.Tickets;
 
 public record TicketResponse(
-    string AnalysisAndDraft,
+    string categoryCreated,
     DateTime ProcessedAt
 );
