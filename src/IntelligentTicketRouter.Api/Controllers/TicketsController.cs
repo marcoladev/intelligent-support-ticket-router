@@ -1,5 +1,6 @@
 using IntelligentTicketRouter.Application.Tickets;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace IntelligentTicketRouter.Api.Controllers
 {
@@ -29,12 +30,27 @@ namespace IntelligentTicketRouter.Api.Controllers
             {
                 var aiResult = await _ticketHandler.ProcessTicketAsync(request.CustomerEmail, request.Message);
 
-                var response = new TicketResponse(aiResult, DateTime.UtcNow);
-                return Ok(response);
+                return Ok(new TicketResponse(aiResult, DateTime.UtcNow));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while orchestrating the AI ticket response.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing the request.");
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetTicketList()
+        {
+            try
+            {
+                var tickets = await _ticketHandler.GetTicketListAsync();
+                return Ok(tickets);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving the ticket list.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing the request.");
             }
         }
