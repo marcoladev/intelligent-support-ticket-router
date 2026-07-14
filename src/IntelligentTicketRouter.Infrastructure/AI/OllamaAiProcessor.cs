@@ -1,4 +1,6 @@
+using System.Text.Json;
 using IntelligentTicketRouter.Application.Interfaces;
+using IntelligentTicketRouter.Domain.Entities;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 
@@ -13,7 +15,7 @@ public class OllamaAiProcessor : IOllamaAiProcessor
         _kernel = kernel;
     }
 
-    public async Task<string> ProcessSupportTicketAsync(string customerEmail, string ticketMessage)
+    public async Task<Ticket> ProcessSupportTicketAsync(string customerEmail, string ticketMessage)
     {
         var chat = _kernel
             .GetRequiredService<IChatCompletionService>();
@@ -21,22 +23,31 @@ public class OllamaAiProcessor : IOllamaAiProcessor
         var history = new ChatHistory();
 
         history.AddSystemMessage("""
-        You are a support ticket classifier.
-        Return:
-        - category
-        - priority
-        - short explanation
+        You are a support ticket classifier. 
+        You must respond ONLY with a JSON object matching this schema:
+        {
+        "customerEmail" : "customerEmail"
+        "Category": 1|2|3,
+        "Priority": 1|2|3,
+        "Message": "shortExplanationOfTheTicket"
+        }
         """);
 
-        history.AddUserMessage($"""
-        Customer: {customerEmail}
+        history.AddUserMessage($"Customer: {customerEmail}\n\nTicket:\n{ticketMessage}");
 
-        Ticket:
-        {ticketMessage}
-        """);
+        var settings = new PromptExecutionSettings
+        {
+            ExtensionData = new Dictionary<string, object>
+            {
+                { "format", "json" }
+            }
+        };
 
-        var response = await chat.GetChatMessageContentAsync(history);
+        var response = await chat.GetChatMessageContentAsync(history, settings);
 
-        return response.Content ?? "";
+        return JsonSerializer.Deserialize<Ticket>(response.Content, new JsonSerializerOptions 
+        { 
+            PropertyNameCaseInsensitive = true 
+        });
     }
 }
