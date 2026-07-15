@@ -41,6 +41,8 @@ namespace IntelligentTicketRouter.Api.Controllers
 
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetTicketList()
         {
             try
